@@ -32,6 +32,7 @@ npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
   >>- 组件样式命名, .air-ui-<组件名> { .<组件名>-<组件内部组成> {} }
 
 ## 目录概述
+``` bash
 ├── README.md
 ├── compile         // 编译脚本目录
 │   ├── build.js    // 改版前遗留问题, 先留存备份
@@ -70,7 +71,7 @@ npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
 │       ├── utils   // 本地开发需要通用的工具库
 │       └── wc      // wc组件库
 └── yarn.lock
-
+```
 
 ## 开发进度&计划
 - [x] 增加wc组件的render生命周期
