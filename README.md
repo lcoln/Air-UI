@@ -1,18 +1,16 @@
 # Air-UI
 
-> 一个基于rollup搭建的, 参考开源框架<a href="https://github.com/bytedo/wcui" target="_blank">wcui</a>, 集成web-component组件库, js插件, 主题库的微型开发框架
-> 寓意是希望能打造一款像空气一样轻, 无杂质(不花里胡哨), 并且能成为刚需(很狂哈哈哈~)的组件工具库
+>1. 一个基于rollup搭建的, 参考开源框架<a href="https://github.com/bytedo/wcui" target="_blank">wcui</a>, 集成web-component组件库, js插件, 主题库的微型开发框架
+>2. 寓意是希望能打造一款像空气一样轻, 无杂质(不花里胡哨), 并且能成为刚需(很狂哈哈哈~)的组件工具库
 
 # 为什么
->> 技术沉淀, 需要载体进行承载, 而载体, 能带来统一规范, 有利于库的不断扩展, 不断为业务输血
->> 市场上众多第三方库, 虽比较实用, 但需要满足大多数场景下的使用, 所以集成较多功能, 较为臃肿。本框架旨在打造轻量级实用的依赖库
->> 可以无视框架, 无缝嵌入任意vue/react/angular/anot/jquery/native js项目上
->> 未雨绸缪, 开发无框架组件的同时也可以开发js插件, 主题库
+>1. 技术沉淀, 需要载体进行承载, 而载体, 能带来统一规范, 有利于库的不断扩展, 不断为业务输血
+>2. 市场上众多第三方库, 虽比较实用, 但需要满足大多数场景下的使用, 所以集成较多功能, 较为臃肿。本框架旨在打造轻量级实用的依赖库
+>3. 可以无视框架, 无缝嵌入任意vue/react/angular/anot/jquery/native js项目上
+>4. 未雨绸缪, 开发无框架组件的同时也可以开发js插件, 主题库
 
 ## 开发环境及生产环境
-
 ``` bash
-
 # 安装依赖
 npm install
 
@@ -21,21 +19,19 @@ npm run dev
 
 # 生产环境
 npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
+```
 
-# 模块化
-<a href="https://betterprogramming.pub/what-are-cjs-amd-umd-esm-system-and-iife-3633a112db62" target="_blank">amd、cjs、esm、iife、umd、system模块化区别</a>
+## 规范
+>1. 主题库的设计需根据ui规范来
+>2. js插件默认以esm格式打包输出
+>3. 使用wc组件
+  >>- 生命周期: mount(组件挂载时), unmount(组件卸载时), watch(组件更新时), adopted(组件移动至不同页面时)
+  >>- 通过在html中<script type="module" src="xx-wc/index.js" crossorigin></script>来引入,
+  >>- 在第三方框架项目中直接import引入
+  >>- 通过<xx-wc props={}></xx-wc>使用
+  >>- 组件样式命名, .air-ui-<组件名> { .<组件名>-<组件内部组成> {} }
 
-# 规范
->> 主题库的设计需根据ui规范来
->> js插件默认以esm格式打包输出
->> 使用wc组件
-  >>> 生命周期: mount(组件挂载时), unmount(组件卸载时), watch(组件更新时), adopted(组件移动至不同页面时)
-  >>> 通过在html中<script type="module" src="xx-wc/index.js" crossorigin></script>来引入,
-  >>> 在第三方框架项目中直接import引入
-  >>> 通过<xx-wc props={}></xx-wc>使用
-  >>> 组件样式命名, .air-ui-<组件名> { .<组件名>-<组件内部组成> {} }
-
-# 目录概述
+## 目录概述
 ├── README.md
 ├── compile         // 编译脚本目录
 │   ├── build.js    // 改版前遗留问题, 先留存备份
@@ -74,7 +70,7 @@ npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
 │       ├── utils   // 本地开发需要通用的工具库
 │       └── wc      // wc组件库
 └── yarn.lock
-```
+
 
 ## 开发进度&计划
 - [x] 增加wc组件的render生命周期
@@ -94,9 +90,10 @@ npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
 - ...
 
 
-# 感谢
+## 感谢
 
-> 灵感来源: <a href="https://github.com/bytedo/wcui" target="_blank">wcui</a>
-> 打包技术栈: <a href="https://rollupjs.org/guide/en/" target="_blank">rollup</a>
-> less生态: <a href="https://lesscss.org/" target="_blank">less</a>
-> wc官方生态: <a href="https://developer.mozilla.org/zh-CN/docs/Web/Web_Components" target="_blank">Web Components</a>
+>- 灵感来源: <a href="https://github.com/bytedo/wcui" target="_blank">wcui</a>
+>- 打包技术栈: <a href="https://rollupjs.org/guide/en/" target="_blank">rollup</a>
+>- less生态: <a href="https://lesscss.org/" target="_blank">less</a>
+>- wc官方生态: <a href="https://developer.mozilla.org/zh-CN/docs/Web/Web_Components" target="_blank">Web Components</a>
+>- 模块化: <a href="https://betterprogramming.pub/what-are-cjs-amd-umd-esm-system-and-iife-3633a112db62" target="_blank">amd、cjs、esm、iife、umd、system模块化区别</a>
