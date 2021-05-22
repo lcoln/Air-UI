@@ -1,0 +1,48 @@
+{
+  "private": true,
+  "name": "air",
+  "workspaces": [
+    "/dist/*"
+  ],
+  "scripts": {
+    "dev": "cross-env FORMAT=esm ENV=DEV node compile",
+    "build": "cross-env FORMAT=esm node compile",
+    "build:amd": "cross-env FORMAT=amd node compile",
+    "build:cjs": "cross-env FORMAT=cjs node compile",
+    "build:esm": "cross-env FORMAT=esm node compile",
+    "build:iife": "cross-env FORMAT=iife node compile",
+    "build:umd": "cross-env FORMAT=umd node compile",
+    "build:system": "cross-env FORMAT=system node compile",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.5.5",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.6.2",
+    "@rollup/plugin-alias": "^3.1.2",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-require": "^1.1.0",
+    "babel-preset-env": "^7.0.0-beta.3",
+    "babel-preset-latest": "^6.24.1",
+    "chai": "^4.2.0",
+    "chalk": "^2.4.2",
+    "chokidar": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "iofs": "^1.2.1",
+    "less": "^3.13.1",
+    "mocha": "^6.1.4",
+    "node-sass": "^6.0.0",
+    "path": "^0.12.7",
+    "rollup": "^2.48.0",
+    "rollup-plugin-less": "^1.1.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "terser": "^5.6.1",
+    "uglify-js": "^3.13.7",
+    "wct-mocha": "^1.0.1"
+  }
+}

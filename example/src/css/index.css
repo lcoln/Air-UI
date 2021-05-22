@@ -1,0 +1,46 @@
+[v-cloak] {
+  display: none;
+}
+* {margin: 0;padding: 0;box-sizing: border-box;}
+html, body {height: 100%;}
+#app{
+  height: 100%;
+}
+
+#app .mod-nav-top {
+  height: 64px;
+  padding: 0 24px;
+  vertical-align: middle;
+  line-height: 64px;
+  background: #1B1521;
+  color: #E86E1C;
+}
+#app .mod-nav-top .logo {
+  float: left;
+  width: 240px;
+  height: 100%;
+  vertical-align: middle;
+}
+#app .mod-nav-top .nav {
+  height: 100%;
+  vertical-align: middle;
+  float: right;
+}
+#app .mod-nav-top .nav .nav-margin {
+  margin-left: 5px;
+}
+#app .mod-nav-top .nav .nav-search {
+  border-style: none;
+  height: 30px;
+  padding: 0 5px;
+  border-radius: 2px;
+}
+#app .mod-nav-left {
+  float: left;
+  height: 100%;
+  width: 240px;
+  padding: 10px;
+  background: #1B1521;
+  color: #fff;
+  border-top: 1px solid #313131;
+}

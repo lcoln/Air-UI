@@ -1,0 +1,138 @@
+<template>
+  <div class="air-ui-tree"></div>
+</template>
+
+<script>
+import '../icon-wc/index.js';
+import './index.less';
+const skins = {
+  1: 'air-green',
+  2: 'air-blue',
+  3: 'air-pine',
+  4: 'air-darkGreen',
+  5: 'air-yellow',
+  6: 'air-purple'
+}
+
+function setClass (type, ele, h) {
+  findEl(type, ele, function (dom) {
+    if (dom.className.indexOf('tree-li-childs') > -1) {
+      if (type === 'child') {
+        dom.className = 'tree-li tree-li-childs tree-li-hide'
+        dom.previousElementSibling.style.background = ''
+        dom.style.height = 0
+      } else if (type === 'parent') {
+        dom.className = 'tree-li tree-li-childs tree-li-show'
+        dom.previousElementSibling.style.background = '#38343c'
+        dom.style.height = dom.style.height ? dom.offsetHeight + h + 'px' : h + 'px'
+      }
+    }
+  })
+}
+
+function findEl (type, dom, cb) {
+  while (type === 'parent' && dom.parentElement) {
+    cb && cb(dom)
+    dom = dom.parentElement
+  }
+  while (type === 'child' && dom.lastElementChild) {
+    cb && cb(dom)
+    dom = dom.lastElementChild
+  }
+}
+
+function tagReg (tag) {
+  return ["div", "a", "p", "span", "section"].includes(tag)
+}
+
+class Tree {
+  props = {
+    data: [],
+    color: '#b7b7b7'
+  }
+  data = {
+
+  }
+  /* render */
+  async mounted () {
+    let _this = this
+    // if (this.props)
+    this.__DOM__.setAttribute('style', `color: ${this.props.color};`)
+    this.__DOM__.addEventListener('click', function (ev) {
+
+      let { target } = ev
+      let { nodeName, innerHTML, className, parentElement } = target
+      let { nextElementSibling } = parentElement
+
+      if ((nodeName === 'LI' && className === 'tree-li-head')
+        || (parentElement && parentElement.className.indexOf('tree-li-head') > -1)){
+        if (nextElementSibling) {
+
+          _this.dispatchEvent(new CustomEvent('tree_wc_select', {
+            detail: ev
+          }))
+          let { className, childElementCount } = nextElementSibling
+          if (className.indexOf('tree-li-show') > -1) {
+            setClass('child', nextElementSibling)
+          } else {
+            setClass('parent', nextElementSibling, childElementCount * 30 + 15)
+          }
+        }
+      } else if (className.indexOf('tree-childs-btn') > -1) {
+        let btns = [...new Set(_this.__DOM__.querySelectorAll('.tree-childs-btn'))]
+        for (let it of btns) {
+          it.style.background = ''
+        }
+        ev.target.style.background = '#38343c'
+      }
+    }, false)
+    this._render(this.props.data)
+  }
+  unmount () {
+    console.log('unmount')
+  }
+  watch (name, old, v) {
+    switch (name) {
+      case 'skin':
+        this.__DOM__.setAttribute('class', `air-ui-tree ${skins[v] || skins[1]}`)
+        break;
+      case 'data':
+        this.props.data = JSON.parse(v)
+        break;
+      case 'color':
+        this.props.color = v
+        break;
+      default:
+        // statements_def
+        break;
+    }
+  }
+  adopted () {
+    console.log('adopted')
+  }
+  _render (v, content = [], count = 1) {
+    for (let [i, it] of v.entries()) {
+      let tag = tagReg(it.tag) ? it.tag : 'a'
+      let href = it.link ? it.link : 'javascript:;'
+      if (it.childs && it.childs.length) {
+        content.push(`<ul class="tree-ul"> <li class="tree-li tree-li-head"> <${tag} class="tree-btn" href="${href}">${it.title}</${tag}> </li><li class="tree-li tree-li-childs tree-li-hide">`)
+        this._render(it.childs, content, count)
+        count++
+      } else if (i === v.length - 1) {
+        content.push(`<${tag} class="tree-btn tree-childs-btn" href="${href}">${it.title}</${tag}>` + '</li></ul>'.repeat(count))
+        count = 1
+      } else {
+        content.push(`<${tag} class="tree-btn tree-childs-btn" href="${href}">${it.title}</${tag}>`)
+      }
+    }
+
+    this.__DOM__.innerHTML = content.join('')
+    return content
+
+    
+  }
+  _calculate(dom, tag){
+
+  }
+}
+</script>

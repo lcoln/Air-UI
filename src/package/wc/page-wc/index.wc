@@ -1,0 +1,142 @@
+<template>
+  <div class="wc-ui-pages pages-green">
+    <!-- <span class="pages-first">首页</span> -->
+    <span>
+      <icon-wc type="left"></icon-wc>
+    </span>
+    <!-- <span class="ui-page-prev"></span> -->
+    <div class="ui-page-box"></div>
+    <!-- <span class="ui-page-next">></span> -->
+    <span>
+      <icon-wc type="right"></icon-wc>
+    </span>
+    <!-- <span class="pages-last">末页</span> -->
+  </div>
+</template>
+
+<script>
+import './index.less';
+import '../icon-wc/index.js';
+const skins = {
+  1: 'pages-green',
+  2: 'pages-blue',
+  3: 'pages-pine',
+  4: 'pages-darkGreen',
+  5: 'pages-yellow',
+  6: 'pages-purple'
+}
+class Page {
+  props = {
+    max: 6,       //最大页数
+    total: 100,     //总页数
+    skin: 1,   //皮肤['green', 'blue', 'pine', 'darkGreen', 'yellow', 'purple']
+    showJumpBtn: false,   //是否显示跳转页码按钮
+    curr: 1
+  }
+  data = {
+    __PAGE__: this.__DOM__.children[1]
+  }
+  /* render */
+  async mounted () {
+    let _this = this
+    this.__DOM__.addEventListener('click', function (ev) {
+      let { total, max, curr, callback } = _this.props
+      let { target } = ev
+      let { nodeName, type, innerHTML, className } = target
+
+      if (nodeName === 'ICON-WC') {
+        switch (type) {
+          case 'left':
+            curr--
+            break;
+          case 'right':
+            curr++
+            break;
+        }
+        _this._jump(curr)
+      } else if(nodeName === 'SPAN' && innerHTML !== '...'){
+        if(parseInt(innerHTML) > 0){curr = parseInt(innerHTML);}
+        if(className === 'ui-page-prev'){curr--}
+        if(className === 'ui-page-next'){curr++}
+        _this._jump(curr)
+      }
+      _this.dispatchEvent(new CustomEvent('select', {
+        detail: curr
+      }))
+    })
+    this._render(1)
+  }
+  unmount () {
+    console.log('unmount')
+  }
+  watch (name, old, v) {
+    switch (name) {
+      case 'curr':
+        this._render(v)
+        break;
+      case 'total':
+        this._render(1)
+        break;
+      case 'skin':
+        this.__DOM__.setAttribute('class', `wc-ui-pages ${skins[v] || skins[1]}`)
+        break;
+      default:
+        // statements_def
+        break;
+    }
+  }
+  adopted () {
+    console.log('adopted')
+  }
+  _render (v) {
+    let pages = this._calculate(v)
+    let { total, max } = this.props
+    let content = pages
+      .map((num, i) => 
+        `<span class="ui-page ${v === num ? 'pages-active' : ''}">
+          ${num}
+        </span>`
+      )
+    const more = `<span class="ui-page ui-page-more">...</span>`
+    // console.log({v})
+    if (max < total) {
+      if (pages[1] !== 2) {
+        content.splice(1, 0, more)
+      }
+      if (pages[max - 2] !== total - 1) {
+        content.splice(content.length - 1, 0, more)
+      }      
+    }
+    this.__PAGE__.innerHTML = content.join('')
+    
+  }
+  _calculate(curr){
+    let { max, total } = this.props
+
+    let dis = Math.floor(max / 2)
+    let start = 0
+    if(total - curr < dis && total >= max)
+      start = total - (max - 1)
+    else if(curr - dis > 0 && total >= max)
+      start = curr - dis
+    else
+      start = 1
+    let end = start + (max - 1) < total ? start + (max - 1) : total
+    let pages = []
+    for(let i = 0,s = start,e = end;i<max;i++,s++){
+      if(s <= e)
+        pages[i] = s
+    }
+    if (pages[max - 1] !== total) pages[max - 1] = total
+    if (pages[0] !== 1) pages[0] = 1
+    return pages
+  }
+  _jump(v){
+    if(v <= 0 || v > this.props.total)
+      return console.log('超过跳转范围')
+
+    this.props.curr = v
+    this._render(v)
+  }
+}
+</script>

@@ -1,0 +1,71 @@
+<template>
+  <section class="do-ui-scroll skin1">
+    <ul>
+      <li></li>
+    </ul>
+  </section>
+</template>
+
+<style lang="less">
+.do-ui-scroll {
+  height: 100%;
+  &.skin1 ul {
+    height: 100%;
+    li {
+      height: 30px;
+      border-bottom: 1px solid #ccc;
+      :first-child {
+        border-top: 1px solid #ccc;
+      }
+    }
+  }
+}
+
+.do-ui-scroll .skin1 ul{}
+
+</style>
+
+<script>
+export default class ScrollSkin1 {
+  props = {
+    data: []
+  }
+  data = {
+    __SCROLL__: this.__DOM__.children[0]
+  }
+  /* render */
+  _render () {
+    let { data } = this.props
+    console.log({data})
+    this.__SCROLL__.innerHTML = data.map(item => {
+      return `<li>${item.val}</li>`
+    })
+  }
+  async mounted () {
+    this._render()
+    console.log(this.el, this.__DOM__)
+  }
+  unmount () {
+    console.log('unmount')
+  }
+  get type() {
+    return this.props.type
+  }
+
+  set type(val) {
+    this.props.type = val
+  }
+  watch (name, old, val) {
+    switch(name) {
+      case 'data':
+        try { this.props.data = JSON.parse(val) } catch (e){}
+      default:
+        break;
+    }
+  }
+  adopted () {
+    console.log('adopted', this.props)
+  }
+
+}
+</script>

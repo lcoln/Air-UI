@@ -1,0 +1,59 @@
+<template>
+  <svg class="icon" viewBox="0 0 1024 1024"></svg>
+</template>
+
+<style lang="scss">
+
+.icon {
+  display: block;
+  width: var(--size, 20px);
+  height: var(--size, 20px);
+  fill: currentColor;
+}
+svg {
+ max-height: 100%;
+}
+
+</style>
+
+<script>
+import svg from './svg'
+export default class Icon {
+  props = {
+    type: '',
+    tag: ''
+  }
+  data = {
+
+  }
+  /* render */
+  _render (val) {
+    this.__DOM__.innerHTML = `<path d="${svg[val]}"></path><text x="50%" y="50%" text-anchor="middle">test</text>`
+    // console.log({el: this.el, __DOM__: this.__DOM__, inner: this.__DOM__.innerHTML})
+  }
+  async mounted () {
+    // console.log(this.el, this.__DOM__)
+  }
+  unmount () {
+    console.log('unmount')
+  }
+  get type() {
+    return this.props.type
+  }
+
+  set type(val) {
+    this.props.type = val
+  }
+  watch (name, old, val) {
+
+    if (name in this.props) {
+      this.props[name] = val
+      this._render(val)
+    }
+  }
+  adopted () {
+    console.log('adopted', this.props)
+  }
+
+}
+</script>
