@@ -74,17 +74,17 @@ npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
 ```
 
 ## 开发进度&计划
-- [x] 增加wc组件的render生命周期
-- [x] 增加对tools/*.js的压缩混淆
-- [x] 在线文档
-- [x] 组件-按钮(`wc-button`)
-- [x] 组件-单选框(`wc-radio`)
-- [x] 组件-下拉选择(`wc-select`)
-- [x] 组件-日期选择器(`wc-datepicker`)
+- [ ] 增加wc组件的render生命周期
+- [ ] 增加对tools/*.js的压缩混淆
+- [ ] 在线文档
+- [ ] 组件-按钮(`wc-button`)
+- [ ] 组件-单选框(`wc-radio`)
+- [ ] 组件-下拉选择(`wc-select`)
+- [ ] 组件-日期选择器(`wc-datepicker`)
 - [x] 组件-树形菜单(`wc-tree`)
 - [x] 组件-分页(`wc-page`)
 - [x] 函数-吸顶(`sticky`)
-- [x] 函数-前端路由(`router`)
+- [ ] 函数-前端路由(`router`)
 - [x] 函数-资源请求(`load-assets`)
 - [x] 函数-网络请求(`fetch`)
 - [x] 函数-页面自适应(`rem-adapter`)
