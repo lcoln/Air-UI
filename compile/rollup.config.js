@@ -1,6 +1,3 @@
-// const commonjs = require('@rollup/plugin-commonjs');
-// const json = require('@rollup/plugin-json');
-// const { getBabelOutputPlugin } = require('@rollup/plugin-babel');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const aliasPlugin = require('@rollup/plugin-alias');
 const { terser } = require('rollup-plugin-terser')
@@ -18,6 +15,7 @@ function getConfig({alias = {}, source, dest, filename, format}) {
       ]
     },
     output: {
+      inlineDynamicImports: true,   // 允许import()
       extend: true,
       format: FORMAT,
       globals: {
@@ -80,7 +78,7 @@ function getConfig({alias = {}, source, dest, filename, format}) {
       if (inputPulgin) {
         baseConfig.input.plugins.push(inputPulgin)
       }
-      // baseConfig.input.plugins.push(terser())
+      baseConfig.input.plugins.push(terser())
       return baseConfig
     case "less":
       baseConfig = {

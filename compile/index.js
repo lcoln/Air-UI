@@ -59,6 +59,7 @@ function watcher () {
           })
         }
         resetParam()
+        isReady = true
         if (process.env.ENV !== 'DEV') process.exit()
         console.log('监听文件变化中,请勿关闭本窗口...')
         yes()
