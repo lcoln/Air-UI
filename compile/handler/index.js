@@ -11,7 +11,7 @@ module.exports = async function handler (source, dest, cb) {
     let project = matchProject(source)
 
     try{
-      handler = require(`./${format}.js`)
+      handler = require(`./${format === 'ts' ? 'js' : format}.js`)
     } catch(e) {
       console.error(`文件${filename}编译出错, 错就错在: ${e.message}`)
     }

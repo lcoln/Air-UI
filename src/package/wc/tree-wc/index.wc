@@ -66,8 +66,9 @@ class Tree {
 
       if ((nodeName === 'LI' && className === 'tree-li-head')
         || (parentElement && parentElement.className.indexOf('tree-li-head') > -1)){
+        // console.log({nextElementSibling}, 45678, this)
+        
         if (nextElementSibling) {
-
           _this.dispatchEvent(new CustomEvent('tree_wc_select', {
             detail: ev
           }))

@@ -83,6 +83,7 @@ npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
 - [ ] 组件-日期选择器(`wc-datepicker`)
 - [x] 组件-树形菜单(`wc-tree`)
 - [x] 组件-分页(`wc-page`)
+- [ ] 组件-上传(`wc-upload`)
 - [x] 函数-吸顶(`sticky`)
 - [ ] 函数-前端路由(`router`)
 - [x] 函数-资源请求(`load-assets`)

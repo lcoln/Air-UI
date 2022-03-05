@@ -34,7 +34,7 @@ module.exports = async function build ({source, dest, filename, format, project}
   const tmp = source.split('/')
   const l = tmp.length - tmp.lastIndexOf(project)
   if (/\/src\/config\.js/.test(source) || 
-    (l > 3 || (l === 3 && tmp[tmp.length - 1] !== 'index.js'))
+    (l > 3 || (l === 3 && !/^index\.(t|j)s$/.test(tmp[tmp.length - 1])))
   ) {
     return
   }
@@ -47,6 +47,7 @@ module.exports = async function build ({source, dest, filename, format, project}
   // console.log({tmp, project})
 
   let configs = makeConfig.genConfigs({source, dest, filename, project, format})
+  console.log({configs})
   const bundle = await rollup.rollup(configs.input);
   // console.log(configs)
   // await bundle.generate(configs.output);

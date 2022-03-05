@@ -1,4 +1,4 @@
-// import { installModule } from '../../../dist/index.js'
+import { installModule } from '../../../dist/index.js'
 import registerT from '../../../dist/package/tools/index.js'
 import register from '../../../dist/package/wc/index.js'
 // import './dist/package/page-wc/index.js'
