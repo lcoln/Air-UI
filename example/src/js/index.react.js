@@ -1,7 +1,7 @@
 import { installModule } from '../../../dist/index.js'
 import registerT from '../../../dist/package/tools/index.js'
 import register from '../../../dist/package/wc/index.js'
-import App from './index.jsx';
+import App from './index.js';
 // import './dist/package/page-wc/index.js'
 installModule(['icon-wc', 'tree-wc'])
 const tree = [{

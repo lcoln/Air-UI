@@ -1,0 +1,6 @@
+*.lock
+src
+compile
+node_modules
+example
+tsconfig.json
