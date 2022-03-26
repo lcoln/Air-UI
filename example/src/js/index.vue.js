@@ -1,7 +1,5 @@
 import { installModule } from '../../../dist/index.js'
-import registerT from '../../../dist/package/tools/index.js'
-import register from '../../../dist/package/wc/index.js'
-// import './dist/package/page-wc/index.js'
+
 installModule(['icon-wc', 'tree-wc'])
 var baseUrl = 'http://localhost/tech/web-component/example/index.html'
 var app = new Vue({

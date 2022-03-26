@@ -1,6 +1,7 @@
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const aliasPlugin = require('@rollup/plugin-alias');
 const { terser } = require('rollup-plugin-terser')
+const extensions = require('rollup-plugin-extensions');
 
 const { FORMAT = 'esm' } = process.env
 
@@ -52,7 +53,15 @@ function getConfig({alias = {}, source, dest, filename, format}) {
   
         // })
       ]
-    }
+    },
+    plugins: [
+      extensions({
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.esm.js'],
+        // Resolves index dir files based on supplied extensions
+        // This is enable by default
+        resolveIndex: true,
+      })
+    ]
   }
 
   baseConfig.input.input = source
@@ -60,6 +69,12 @@ function getConfig({alias = {}, source, dest, filename, format}) {
   baseConfig.output.name = filename.split('.')[0]
 
   switch(format) {
+    case "tsx":
+      baseConfig.plugins.push(babel({ 
+        presets: ['@babel/preset-react'], 
+        babelHelpers: 'bundled',
+        extensions: ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx']  
+      }))
     case "js":
       let aliasKeys = Object.keys(alias)
       let inputPulgin
@@ -95,7 +110,7 @@ function getConfig({alias = {}, source, dest, filename, format}) {
           ]
         },
       }
-      return baseConfig
+    return baseConfig
   }
 }
 

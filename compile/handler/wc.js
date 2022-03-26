@@ -109,6 +109,7 @@ async function mkWCFile ({ style, html, js }, filename, source) {
           this.root.innerHTML = ${innerHTML}
           this.__ELM__ = Array.from(this.root.children)
           this.__DOM__ = this.__ELM__[1]
+          this?.__REGIESTRYCONFIG__()
           ${data}
       }`)
     .replace('mounted', 'connectedCallback')
@@ -124,12 +125,10 @@ async function mkWCFile ({ style, html, js }, filename, source) {
     // console.log(code)
     let result = uglify.minify({[filename]: code}).code
     // console.log({name})
-    return `'use strict'
+    return uglify.minify(`'use strict'
 
-${result}
-if(!customElements.get('${name.toLowerCase()}-wc')){
-  customElements.define('${name.toLowerCase()}-wc', ${name})
-}`
+${result}`
+)
 }
 
 module.exports = async function build ({source, dest, filename, code}) {
@@ -142,8 +141,8 @@ module.exports = async function build ({source, dest, filename, code}) {
   html = html ? html[1] : ''
   js = js ? js[1] : ''
   let result = await mkWCFile({ style, html, js }, filename, source)    
-
-  fs.echo(result, dest.replace(/\.wc$/, '.js'))
-  return result
+  // console.log({result})
+  fs.echo(result.code, dest.replace(/\.wc$/, '.js'))
+  return result.code
   
 }

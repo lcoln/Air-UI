@@ -1,6 +1,6 @@
 {
   "name": "@linteng/airui",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "集成web-component组件库, js插件, 主题库的微型开发框架",
   "author": "linteng <linteng.me@gmail.com>",
   "homepage": "",
@@ -57,5 +57,11 @@
     "uglify-js": "^3.13.7",
     "wct-mocha": "^1.0.1"
   },
-  "typings": "types/index.d.ts"
+  "typings": "types/index.d.ts",
+  "dependencies": {
+    "history": "4.10.1",
+    "react": "^17.0.2",
+    "react-to-webcomponent": "^1.5.1",
+    "rollup-plugin-extensions": "^0.1.0"
+  }
 }

@@ -2,16 +2,33 @@ import * as utils from '../utils/index.js';
 import { hideProperty, isString } from '../utils/index.js';
 import init from './init.js';
 
-export default async function (module) {
+export default async function (module, baseConfig = {framework: 'react'}) {
   init()
   module = isString(module) ? [module] : module
   hideProperty(HTMLElement.prototype, 'Utils', utils)
-  // await import(`./icon-wc/index.js`)
   while (module.length) {
     try {
-      let name = module.shift()
-      let m = await import(`./${name}/index.js`)
-      // window.customElements.define(name, m.default);
+      let wcObj = module.shift();
+      let name = '';
+      let config = {};
+
+      if (utils.isString(wcObj)) {
+        name = wcObj.toLowerCase()
+      } else if (utils.isObject(wcObj)) {
+        name = wcObj?.name?.toLowerCase();
+        config = wcObj?.config;
+      }
+      console.log({config})
+  
+      if(!customElements.get(name)){
+        let m = (await import(`./${name}`)).default
+        hideProperty(m.prototype, '__REGIESTRYCONFIG__', function() {
+          this.__WCCONFIG__ = config
+          this.__BASECONFIG__ = baseConfig
+        })
+        
+        customElements.define(name, m);
+      }
     } catch (e) {
       console.log({e})
     }

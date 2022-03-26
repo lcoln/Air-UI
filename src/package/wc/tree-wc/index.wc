@@ -1,10 +1,14 @@
 <template>
-  <div class="air-ui-tree"></div>
+  <div class="air-ui-tree-container">
+    <div class="air-ui-tree"></div>
+  </div>
 </template>
 
 <script>
 import '../icon-wc/index.js';
 import './index.less';
+import router from '../../tools/router/index.esm.js'
+
 const skins = {
   1: 'air-green',
   2: 'air-blue',
@@ -18,12 +22,23 @@ function setClass (type, ele, h) {
   findEl(type, ele, function (dom) {
     if (dom.className.indexOf('tree-li-childs') > -1) {
       if (type === 'child') {
+        // console.log(1111)
         dom.className = 'tree-li tree-li-childs tree-li-hide'
-        dom.previousElementSibling.style.background = ''
+        // dom.previousElementSibling.style.background = ''
         dom.style.height = 0
+        findEl('parent', ele, function (dom) {
+          // console.log(22222)
+          // console.log({dom})
+          if (dom.className === 'tree-li tree-li-childs tree-li-show') {
+            // console.log({dom})
+            dom.style.height = dom.offsetHeight - h + 'px'
+          }
+        })
+
       } else if (type === 'parent') {
+        // console.log(33333)
         dom.className = 'tree-li tree-li-childs tree-li-show'
-        dom.previousElementSibling.style.background = '#38343c'
+        // dom.previousElementSibling.style.background = '#38343c'
         dom.style.height = dom.style.height ? dom.offsetHeight + h + 'px' : h + 'px'
       }
     }
@@ -42,10 +57,10 @@ function findEl (type, dom, cb) {
 }
 
 function tagReg (tag) {
-  return ["div", "a", "p", "span", "section"].includes(tag)
+  return ["div", "a", "p", "span", "section", "Link"].includes(tag)
 }
 
-class Tree {
+export default class Tree {
   props = {
     data: [],
     color: '#b7b7b7'
@@ -53,17 +68,32 @@ class Tree {
   data = {
 
   }
+
   /* render */
   async mounted () {
     let _this = this
-    // if (this.props)
+    let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
+    // console.log({ router });
+    router.on('*', (ev) => {
+      let btns = [...new Set(_this.__DOM__.querySelectorAll('.tree-childs-btn'))]
+      let btns1 = [...new Set(_this.__DOM__.querySelectorAll('.tree-btn'))]
+      // console.log({btns, ev});
+      for (let it of [...btns, ...btns1]) {
+        if (ev.target.location.pathname === it.pathname) {
+          it.style.background = '#38343c'
+        } else {
+          it.style.background = ''
+        }
+      }
+    })
+
     this.__DOM__.setAttribute('style', `color: ${this.props.color};`)
     this.__DOM__.addEventListener('click', function (ev) {
 
       let { target } = ev
       let { nodeName, innerHTML, className, parentElement } = target
       let { nextElementSibling } = parentElement
-
+      // console.log({nodeName})
       if ((nodeName === 'LI' && className === 'tree-li-head')
         || (parentElement && parentElement.className.indexOf('tree-li-head') > -1)){
         // console.log({nextElementSibling}, 45678, this)
@@ -73,21 +103,35 @@ class Tree {
             detail: ev
           }))
           let { className, childElementCount } = nextElementSibling
+          // console.log({childElementCount, nextElementSibling})
           if (className.indexOf('tree-li-show') > -1) {
-            setClass('child', nextElementSibling)
+            setClass('child', nextElementSibling, childElementCount * 30 + 15)
           } else {
             setClass('parent', nextElementSibling, childElementCount * 30 + 15)
           }
         }
       } else if (className.indexOf('tree-childs-btn') > -1) {
-        let btns = [...new Set(_this.__DOM__.querySelectorAll('.tree-childs-btn'))]
-        for (let it of btns) {
-          it.style.background = ''
+        // let btns = [...new Set(_this.__DOM__.querySelectorAll('.tree-childs-btn'))]
+        // for (let it of btns) {
+        //   it.style.background = ''
+        // }
+        // ev.target.style.background = '#38343c'
+      } 
+      if (nodeName === "A") {
+        if (__BASECONFIG__?.framework === 'react') {
+          if (__WCCONFIG__?.mode === 'browser') {
+            ev.preventDefault();
+            if (target.href !== 'javascript:;' && target.pathname)
+              __WCCONFIG__?.history?.push(target.pathname)
+          } else {}
         }
-        ev.target.style.background = '#38343c'
+        // console.log(99999)
+        // history.pushState({}, "", target.dataset.link)
       }
     }, false)
-    this._render(this.props.data)
+    this.__DOM__.children[0].innerHTML = this._render(this.props.data)
+    // console.log(this.config?.reactConfig?.ReactDOM.render)
+    // this.config?.reactConfig?.ReactDOM.render(3333, this.config?.mountPoint)
   }
   unmount () {
     console.log('unmount')
@@ -111,13 +155,23 @@ class Tree {
   adopted () {
     console.log('adopted')
   }
-  _render (v, content = [], count = 1) {
+  _render (v, content = [], count = 1, chref = '') {
+    let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
     for (let [i, it] of v.entries()) {
       let tag = tagReg(it.tag) ? it.tag : 'a'
-      let href = it.link ? it.link : 'javascript:;'
+      // let link = it.link ? `data-link=${link}` : '';
+      // let href = it.href ? `${chref === 'javascript:;' ? '' : `${chref}`}/${it.href}` : 'javascript:;'
+      // let href = link || !it.path
+      //   ? 'javascript:;' 
+      //   : `#${chref === 'javascript:;' ? '' : chref}/${it.path}`
+      
+      let href = __WCCONFIG__?.mode === 'browser'
+        ? (it.path ? `${chref === 'javascript:;' ? '' : chref}/${it.path}` : 'javascript:;')
+        : `#${chref === 'javascript:;' ? '' : chref}/${it.path}`
+
       if (it.childs && it.childs.length) {
         content.push(`<ul class="tree-ul"> <li class="tree-li tree-li-head"> <${tag} class="tree-btn" href="${href}">${it.title}</${tag}> </li><li class="tree-li tree-li-childs tree-li-hide">`)
-        this._render(it.childs, content, count)
+        this._render(it.childs, content, count, href)
         count++
       } else if (i === v.length - 1) {
         content.push(`<${tag} class="tree-btn tree-childs-btn" href="${href}">${it.title}</${tag}>` + '</li></ul>'.repeat(count))
@@ -126,9 +180,8 @@ class Tree {
         content.push(`<${tag} class="tree-btn tree-childs-btn" href="${href}">${it.title}</${tag}>`)
       }
     }
-
-    this.__DOM__.innerHTML = content.join('')
-    return content
+    // this.__DOM__.innerHTML = content.join('')
+    return content.join('')
 
     
   }

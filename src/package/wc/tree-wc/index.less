@@ -1,36 +1,44 @@
-.air-ui-tree {
-  ol,ul{list-style:none}
-  .tree-ul {
-    .tree-li {
-      overflow: hidden;
-      transition: .4s;
-      cursor: pointer;
-      .tree-btn {
-        display: block;
-        height: 30px;
-        line-height: 30px;
+.air-ui-tree-container {
+  height: 100%;
+  width: 240px;
+  padding: 10px;
+  background: #1B1521;
+  color: #fff;
+  .air-ui-tree {
+    height: 100%;
+    ol,ul{list-style:none}
+    .tree-ul {
+      .tree-li {
+        overflow: hidden;
         transition: .4s;
-        padding: 0 5px;
-        color: inherit;
-        &:hover{
-          padding-left: 10px;
-          background: #38343c;
+        cursor: pointer;
+        .tree-btn {
+          display: block;
+          height: 30px;
+          line-height: 30px;
+          transition: .4s;
+          padding: 0 5px;
+          color: inherit;
+          &:hover{
+            padding-left: 10px;
+            background: #38343c;
+          }
+        }
+        .tree-childs-btn {
+          margin: 5px 0;
         }
       }
-      .tree-childs-btn {
-        margin: 5px 0;
+      .tree-li-childs {
+        padding-left: 10px;
       }
-    }
-    .tree-li-childs {
-      padding-left: 10px;
-    }
-    .tree-li-head {
-    }
-    .tree-li-show{
-      margin-top: 5px;
-    }
-    .tree-li-hide{
-      height: 0;
+      .tree-li-head {
+      }
+      .tree-li-show{
+        margin-top: 5px;
+      }
+      .tree-li-hide{
+        height: 0;
+      }
     }
   }
 }
