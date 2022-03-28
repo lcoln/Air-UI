@@ -1,6 +1,6 @@
-import { installModule } from '../../../dist/index.js'
+import { installWC } from '../../../dist/index.js'
 
-installModule(['icon-wc', 'tree-wc'])
+installWC(['icon-wc', 'tree-wc'])
 var baseUrl = 'http://localhost/tech/web-component/example/index.html'
 var app = new Vue({
   el: '#app',
@@ -23,14 +23,14 @@ var app = new Vue({
         link: '',
         childs: [{
           title: 'Navigation(导航类)',
-          link: '#!tree',
+          link: 'tree',
           childs: [{
             title: 'Page',
-            link: '#!page',
+            link: 'page',
             tag: '<div>test</div>'
           },{
             title: 'Tree',
-            link: '#!tree'
+            link: 'tree'
           }]
         }]
       }]

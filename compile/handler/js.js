@@ -36,7 +36,7 @@ module.exports = async function build ({source, dest, filename, format, project}
   // console.log({l, source, tmp, project})
 
   if (/\/src\/config\.js/.test(source) || 
-    (l > 3 || (l === 3 && !/^index\.(t|j)s$/.test(tmp[tmp.length - 1]))) &&
+    (l > 3 || (l === 3 && !/^index\.(t|j)s(x?)$/.test(tmp[tmp.length - 1]))) &&
     project
   ) {
     return
@@ -47,12 +47,11 @@ module.exports = async function build ({source, dest, filename, format, project}
     // console.log({dest, source, filename})
     return write(dest, fs.cat(source), filename, project, format)
   }
-  // console.log({tmp, project})
+  // console.log({filename})
 
   let configs = makeConfig.genConfigs({source, dest, filename, project, format})
   // console.log({configs})
   const bundle = await rollup.rollup(configs.input);
-  // console.log(configs)
   // await bundle.generate(configs.output);
   await bundle.write(configs.output)
   await bundle.close();

@@ -24,7 +24,8 @@ function resetParam() {
   files = {
     js: [],
     less: [],
-    wc: []
+    wc: [],
+    // tsx: []
   }
   isReady = false
 }

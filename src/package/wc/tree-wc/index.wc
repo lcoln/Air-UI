@@ -60,6 +60,20 @@ function tagReg (tag) {
   return ["div", "a", "p", "span", "section", "Link"].includes(tag)
 }
 
+function pickMenuItem(ctx, pathname) {
+  let btns = [...new Set(ctx.__DOM__.querySelectorAll('.tree-childs-btn'))]
+  let btns1 = [...new Set(ctx.__DOM__.querySelectorAll('.tree-btn'))]
+  console.log({btns, btns1, ctx: ctx.__DOM__})
+  for (let it of [...btns, ...btns1]) {
+    console.log({pathname, p: it.pathname})
+    if (pathname === it.pathname) {
+      it.style.background = '#38343c'
+    } else {
+      it.style.background = ''
+    }
+  }
+}
+
 export default class Tree {
   props = {
     data: [],
@@ -73,25 +87,17 @@ export default class Tree {
   async mounted () {
     let _this = this
     let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
-    // console.log({ router });
+    console.log({ router: location.pathname });
+    pickMenuItem(_this, location.pathname)
     router.on('*', (ev) => {
-      let btns = [...new Set(_this.__DOM__.querySelectorAll('.tree-childs-btn'))]
-      let btns1 = [...new Set(_this.__DOM__.querySelectorAll('.tree-btn'))]
-      // console.log({btns, ev});
-      for (let it of [...btns, ...btns1]) {
-        if (ev.target.location.pathname === it.pathname) {
-          it.style.background = '#38343c'
-        } else {
-          it.style.background = ''
-        }
-      }
+      pickMenuItem(_this, ev.target.location.pathname)
     })
 
     this.__DOM__.setAttribute('style', `color: ${this.props.color};`)
     this.__DOM__.addEventListener('click', function (ev) {
 
       let { target } = ev
-      let { nodeName, innerHTML, className, parentElement } = target
+      let { nodeName, innerHTML, className, parentElement, pathname } = target
       let { nextElementSibling } = parentElement
       // console.log({nodeName})
       if ((nodeName === 'LI' && className === 'tree-li-head')
@@ -111,11 +117,8 @@ export default class Tree {
           }
         }
       } else if (className.indexOf('tree-childs-btn') > -1) {
-        // let btns = [...new Set(_this.__DOM__.querySelectorAll('.tree-childs-btn'))]
-        // for (let it of btns) {
-        //   it.style.background = ''
-        // }
-        // ev.target.style.background = '#38343c'
+        console.log({pathname})
+        pickMenuItem(_this, pathname)
       } 
       if (nodeName === "A") {
         if (__BASECONFIG__?.framework === 'react') {

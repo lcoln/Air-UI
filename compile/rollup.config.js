@@ -2,6 +2,8 @@ const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const aliasPlugin = require('@rollup/plugin-alias');
 const { terser } = require('rollup-plugin-terser')
 const extensions = require('rollup-plugin-extensions');
+const typescript = require('rollup-plugin-typescript2');
+const { babel } = require('@rollup/plugin-babel');
 
 const { FORMAT = 'esm' } = process.env
 
@@ -70,11 +72,14 @@ function getConfig({alias = {}, source, dest, filename, format}) {
 
   switch(format) {
     case "tsx":
-      baseConfig.plugins.push(babel({ 
-        presets: ['@babel/preset-react'], 
-        babelHelpers: 'bundled',
+      baseConfig.plugins.push(...[typescript(), babel({ 
+        presets: [
+          "@babel/preset-typescript", 
+          '@babel/preset-env',
+          '@babel/preset-react'
+        ], 
         extensions: ['.js', '.jsx', '.es6', '.es', '.mjs', '.ts', '.tsx']  
-      }))
+      })])
     case "js":
       let aliasKeys = Object.keys(alias)
       let inputPulgin
