@@ -65,7 +65,7 @@ function pickMenuItem(ctx, pathname) {
   let btns1 = [...new Set(ctx.__DOM__.querySelectorAll('.tree-btn'))]
   console.log({btns, btns1, ctx: ctx.__DOM__})
   for (let it of [...btns, ...btns1]) {
-    console.log({pathname, p: it.pathname})
+    // console.log({pathname, p: it.pathname})
     if (pathname === it.pathname) {
       it.style.background = '#38343c'
     } else {

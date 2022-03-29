@@ -1,6 +1,6 @@
 {
   "name": "@linteng/airui",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "集成web-component组件库, js插件, 主题库的微型开发框架",
   "author": "linteng <linteng.me@gmail.com>",
   "homepage": "",
