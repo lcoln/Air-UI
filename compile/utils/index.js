@@ -5,7 +5,12 @@ const optc = (obj) => Object.prototype.toString.call(obj);
 const makeConfig = require('../rollup.config.js');
 const rollup = require('rollup');
 const terser = require('terser');
-const { sep } = path;
+// const { sep } = path;
+const sepTransform = {
+  '\\': '\\\\',
+  '/': '\/'
+}
+let sep = sepTransform[path.sep]
 
 function isFunction(obj) {
   return typeof obj === 'function';
