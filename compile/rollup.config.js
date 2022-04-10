@@ -10,6 +10,7 @@ sep = sep.replace('\\', '\\\\');
 const { FORMAT = 'esm' } = process.env
 
 function getConfig({alias = {}, source, dest, filename, format}) {
+  console.log({dest});
   let baseConfig = {
     input: {
       external: [],
@@ -102,12 +103,12 @@ module.exports = {
     );
     if (!reg.test(dest)) {
       let project = filename.split('.')[0]
-      dest = dest.split('/')
+      dest = dest.split(sep)
       if (project !== 'index') {
         dest.splice(-1, 0, project)
       }
       dest[dest.length - 1] = `index.${FORMAT}.js`
-      dest = dest.join('/')
+      dest = dest.join(sep)
     }
     return dest
   },

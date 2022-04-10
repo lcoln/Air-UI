@@ -2,7 +2,7 @@ const chokidar = require('chokidar')
 const { resolve } = require('./utils')
 const handler = require('./handler')
 const ignoreWatch = require('./config/ignore.watch.json')
-const { matchFileFormat } = require('./utils')
+const { matchFileFormat, sep } = require('./utils')
 const chalk = require('chalk')
 const fs = require('iofs')
 
@@ -14,7 +14,7 @@ function shouldIgnoreWatch(file) {
 async function watcherBuild (file, format) {
   console.log(chalk.red(`正在编译${format}文件: ${file}`))
   let entry = file
-  let output = file.replace('/src', '/dist')
+  let output = file.replace(`${sep}src`, `${sep}dist`)
   await handler(entry, output)
 }
 let files

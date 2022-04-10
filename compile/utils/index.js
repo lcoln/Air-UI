@@ -96,7 +96,9 @@ function matchProject(filename) {
 }
 
 function fixReg(p, isGlobal = true) {
-  return new RegExp(p.split('/').join(sep).replace('(.*).', '\\.'), isGlobal ? 'g' : '');
+  return new RegExp(p.split('/')
+    .join(sep)
+    .replace('(.*).', '\\.'), isGlobal ? 'g' : '');
 }
 
 exportPlugins(exports, {
@@ -107,5 +109,6 @@ exportPlugins(exports, {
   matchFileFormat,
   matchFileName,
   matchProject,
-  fixReg
+  fixReg,
+  sep
 });
