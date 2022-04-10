@@ -14,7 +14,11 @@ function shouldIgnoreWatch(file) {
 async function watcherBuild (file, format) {
   console.log(chalk.red(`正在编译${format}文件: ${file}`))
   let entry = file
-  let output = file.replace(`${sep}src`, `${sep}dist`)
+  let output = file.replace(`src`, `dist`)
+  console.log({output})
+  setTimeout(() => {
+    process.exit();
+  }, 5000)
   await handler(entry, output)
 }
 let files
@@ -42,7 +46,7 @@ function watcher () {
         if (!fs.isdir(filepath) && !shouldIgnoreWatch(filepath)) {
           let format = matchFileFormat(filepath)
           if (isReady) {
-            await watcherBuild(filepath, format)
+            // await watcherBuild(filepath, format)
           } else {
             files[format] && files[format].push(filepath)
           }
@@ -55,9 +59,9 @@ function watcher () {
           await Promise.all(files[it].map(async file => {
             await watcherBuild(file, it)
           }));
-          files[it].map(file => {
-            watcherBuild(file, it)
-          })
+          // files[it].map(file => {
+          //   watcherBuild(file, it)
+          // })
         }
         resetParam()
         isReady = true

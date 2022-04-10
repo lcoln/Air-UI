@@ -10,7 +10,7 @@ sep = sep.replace('\\', '\\\\');
 const { FORMAT = 'esm' } = process.env
 
 function getConfig({alias = {}, source, dest, filename, format}) {
-  console.log({dest});
+  // console.log({dest});
   let baseConfig = {
     input: {
       external: [],

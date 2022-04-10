@@ -15,7 +15,7 @@ module.exports = async function handler (source, dest, cb) {
     } catch(e) {
       console.error(`文件${filename}编译出错, 错就错在: ${e.message}`)
     }
-    // console.log({source})
+    console.log({dest})
 
     handler && await handler({source, dest, filename, code, format, project})
   }
