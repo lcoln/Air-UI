@@ -1,6 +1,11 @@
 import { installWC } from '../../../dist/index.js'
 
-installWC(['icon-wc', 'tree-wc'])
+installWC([{
+  name: 'tree-wc',
+  config: {
+    mode: 'hash',   // hash
+  }
+}, 'icon-wc'], {framework: 'vue'})
 var baseUrl = 'http://localhost/tech/web-component/example/index.html'
 var app = new Vue({
   el: '#app',
@@ -10,27 +15,24 @@ var app = new Vue({
       msg: 'Hello Vue!',
       tree: [{
         title: '入门教程',
-        link: '',
         childs: [{
           title: '安装',
-          link: ''
+          path: 'install'
         }, {
           title: '使用',
-          link: ''
+          path: 'api'
         }]
       }, {
         title: 'Components',
-        link: '',
         childs: [{
           title: 'Navigation(导航类)',
-          link: 'tree',
+          path: 'tree',
           childs: [{
             title: 'Page',
-            link: 'page',
-            tag: '<div>test</div>'
+            path: 'page',
           },{
             title: 'Tree',
-            link: 'tree'
+            path: 'tree'
           }]
         }]
       }]

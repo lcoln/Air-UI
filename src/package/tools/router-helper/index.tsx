@@ -33,6 +33,7 @@ function initRoute(pageRouter: PageRouter) {
 
 // 将路由进行过滤后返回
 function routeFilter(Page: any, pageConfig: any, props: any, routePath: any) {
+  // console.log({ routePath });
   // const NotFound = pageConfig['404'];
   return !pageConfig.filter || pageConfig.filter(props, routePath)
     ? Page
@@ -73,7 +74,7 @@ function reducePage(page: PageRouter, pageConfig: object, props = {}) {
   // 子路由
   const child = page.children ? page.children.map((item: PageRouter) => {
     const curProps = concatProps(props, item, {});
-    // console.log({item})
+
     return routeFilter(<Route
       // exact
       path={item.path}
@@ -85,28 +86,26 @@ function reducePage(page: PageRouter, pageConfig: object, props = {}) {
 
   // 当前路由
   const curProps = concatProps(props, page, {});
-  const component = page.component ? (
-    routeFilter(<Route
-      // exact
-      path={page.path}
-      key={page.id}
-      render={() => <page.component {...curProps} />}
-    />, pageConfig, curProps, page.path)
-  ) : [];
+
+  const component = page.component ? routeFilter(<Route
+    exact
+    path={page.path}
+    key={page.id}
+    render={() => <page.component {...curProps} />}
+  />, pageConfig, curProps, page.path) : [];
 
   // 重定向路由组件
   let redirects = [];
   if (page?.config && page.config.redirects) {
     redirects = page.config.redirects.map((item: any) => (
       <Redirect
-        exact
+        // exact
         key={`${item.from}_${item.to}`}
         from={item.from}
         to={item.to}
       />
     ));
   }
-  console.log({ redirects, child, component });
   let result = (
     <Switch>
       { redirects }

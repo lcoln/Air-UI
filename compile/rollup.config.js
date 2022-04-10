@@ -4,6 +4,8 @@ const { terser } = require('rollup-plugin-terser')
 const extensions = require('rollup-plugin-extensions');
 const typescript = require('rollup-plugin-typescript2');
 const { babel } = require('@rollup/plugin-babel');
+let { sep } = require('path');
+sep = sep.replace('\\', '\\\\');
 
 const { FORMAT = 'esm' } = process.env
 
@@ -11,11 +13,7 @@ function getConfig({alias = {}, source, dest, filename, format}) {
   let baseConfig = {
     input: {
       external: [],
-      plugins: [
-        // commonjs(),
-        // json()
-        // babel()
-      ]
+      plugins: []
     },
     output: {
       inlineDynamicImports: true,   // 允许import()
@@ -24,43 +22,15 @@ function getConfig({alias = {}, source, dest, filename, format}) {
       globals: {
         '@': 'src'
       },
-  
       banner: '',
       footer: '',
-      // intro: 'var intro = "intro";',
-      // outro: 'var outro = "outro";',
-      // sourcemap: true,
       sourcemapFile: '.',
       plugins: [
-        // getBabelOutputPlugin({
-        //   allowAllFormats: true,
-        //   "presets": [
-        //     [
-        //       "@babel/preset-env",
-        //       {
-        //         // "useBuiltIns": "usage",
-        //         // "corejs": "3"
-        //         // "debug": true
-        //       }
-        //     ]
-        //   ],
-        //   "plugins": [
-        //     [
-        //       "@babel/plugin-transform-runtime",
-        //       {
-        //         // "corejs": "3" // 指定 runtime-corejs 的版本，目前有 2 3 两个版本
-        //       }
-        //     ]
-        //   ]
-  
-        // })
       ]
     },
     plugins: [
       extensions({
         extensions: ['.tsx', '.ts', '.jsx', '.js', '.esm.js'],
-        // Resolves index dir files based on supplied extensions
-        // This is enable by default
         resolveIndex: true,
       })
     ]
@@ -82,23 +52,21 @@ function getConfig({alias = {}, source, dest, filename, format}) {
       })])
     case "js":
       let aliasKeys = Object.keys(alias)
-      let inputPulgin
-      if (Object.keys(alias).length) {
-        inputPulgin = aliasPlugin({
+      
+      baseConfig.input.plugins = [
+        ...baseConfig.input.plugins,
+        aliasKeys.length && aliasPlugin({
           entries: aliasKeys.map(k => ({
             find: k, replacement: alias[k]
           }))
-        })
-      }
-      baseConfig.input.plugins.push(nodeResolve({
-        browser: true,
-        preferBuiltins: false
-      }))
+        }),
+        nodeResolve({
+          browser: true,
+          preferBuiltins: false
+        }),
+        terser()
+      ]
       
-      if (inputPulgin) {
-        baseConfig.input.plugins.push(inputPulgin)
-      }
-      baseConfig.input.plugins.push(terser())
       return baseConfig
     case "less":
       baseConfig = {
@@ -124,13 +92,15 @@ module.exports = {
     if (!project) return null
     const config = require('../src/config')
     const c = config.genConfig(project) || {}
-    // let key = c.alias ? Object.keys(c.alias)[0] : ''
-    // let val = c.alias ? c.alias[k] : ''
     return c.alias
   },
   // 如果不是工程入口, 则新建一层项目目录并把`index.${FORMAT}.js`作为项目入口
   regenerateDest(dest, filename) {
-    if (!/(\/(tools|utils)\/index\.js|\/package\/styles\/)/.test(dest)) {
+    
+    const reg = new RegExp(
+      `(${sep}(tools|utils)${sep}index\.js|${sep}package${sep}styles${sep})`
+    );
+    if (!reg.test(dest)) {
       let project = filename.split('.')[0]
       dest = dest.split('/')
       if (project !== 'index') {
@@ -165,4 +135,3 @@ module.exports = {
     }
   }
 }
-//  //imgtest.igeekee.cn/...

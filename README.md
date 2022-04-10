@@ -19,6 +19,19 @@ npm run dev
 
 # 生产环境
 npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
+
+# 本地预览
+npm run build:<format> // amd、cjs、esm、iife、umd、system, 默认esm
+```
+## 本地预览
+``` nginx
+// 配置ngnix
+server {
+  listen     80;
+  root	     /path/to/airui/dist;
+  index	     index.html;
+}
+http://localhost/path/to/airui/dist/index-vue.html
 ```
 
 ## 规范

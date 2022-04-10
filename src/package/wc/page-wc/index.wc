@@ -25,7 +25,7 @@ const skins = {
   5: 'pages-yellow',
   6: 'pages-purple'
 }
-class Page {
+export default class Page {
   props = {
     max: 6,       //最大页数
     total: 100,     //总页数

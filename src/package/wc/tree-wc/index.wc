@@ -18,27 +18,24 @@ const skins = {
   6: 'air-purple'
 }
 
+const routeMode = {
+  'hash': 'hash',
+  'browser': 'pathname'
+}
+
 function setClass (type, ele, h) {
   findEl(type, ele, function (dom) {
     if (dom.className.indexOf('tree-li-childs') > -1) {
       if (type === 'child') {
-        // console.log(1111)
         dom.className = 'tree-li tree-li-childs tree-li-hide'
-        // dom.previousElementSibling.style.background = ''
         dom.style.height = 0
         findEl('parent', ele, function (dom) {
-          // console.log(22222)
-          // console.log({dom})
           if (dom.className === 'tree-li tree-li-childs tree-li-show') {
-            // console.log({dom})
             dom.style.height = dom.offsetHeight - h + 'px'
           }
         })
-
       } else if (type === 'parent') {
-        // console.log(33333)
         dom.className = 'tree-li tree-li-childs tree-li-show'
-        // dom.previousElementSibling.style.background = '#38343c'
         dom.style.height = dom.style.height ? dom.offsetHeight + h + 'px' : h + 'px'
       }
     }
@@ -60,18 +57,24 @@ function tagReg (tag) {
   return ["div", "a", "p", "span", "section", "Link"].includes(tag)
 }
 
-function pickMenuItem(ctx, pathname) {
+function pickMenuItem(ctx, pathname, mode) {
   let btns = [...new Set(ctx.__DOM__.querySelectorAll('.tree-childs-btn'))]
   let btns1 = [...new Set(ctx.__DOM__.querySelectorAll('.tree-btn'))]
-  console.log({btns, btns1, ctx: ctx.__DOM__})
+  console.log({pathname})
   for (let it of [...btns, ...btns1]) {
-    // console.log({pathname, p: it.pathname})
-    if (pathname === it.pathname) {
+    console.log({it})
+    if (pathname === it[routeMode[mode]]) {
       it.style.background = '#38343c'
     } else {
       it.style.background = ''
     }
   }
+}
+
+function createHref (pathname, mode) {
+  return pathname === 'javascript:;' 
+    ? pathname
+    : (mode === 'hash' ? `#${pathname}` : pathname)
 }
 
 export default class Tree {
@@ -87,10 +90,15 @@ export default class Tree {
   async mounted () {
     let _this = this
     let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
-    console.log({ router: location.pathname });
-    pickMenuItem(_this, location.pathname)
+    // console.log({ __WCCONFIG__ });
+    const { mode = 'browser' } = __WCCONFIG__;
+    pickMenuItem(_this, location[routeMode[mode]], mode)
     router.on('*', (ev) => {
-      pickMenuItem(_this, ev.target.location.pathname)
+      pickMenuItem(
+        _this, 
+        ev.target.location[routeMode[mode]],
+        mode
+      )
     })
 
     this.__DOM__.setAttribute('style', `color: ${this.props.color};`)
@@ -99,17 +107,14 @@ export default class Tree {
       let { target } = ev
       let { nodeName, innerHTML, className, parentElement, pathname } = target
       let { nextElementSibling } = parentElement
-      // console.log({nodeName})
       if ((nodeName === 'LI' && className === 'tree-li-head')
         || (parentElement && parentElement.className.indexOf('tree-li-head') > -1)){
-        // console.log({nextElementSibling}, 45678, this)
         
         if (nextElementSibling) {
           _this.dispatchEvent(new CustomEvent('tree_wc_select', {
             detail: ev
           }))
           let { className, childElementCount } = nextElementSibling
-          // console.log({childElementCount, nextElementSibling})
           if (className.indexOf('tree-li-show') > -1) {
             setClass('child', nextElementSibling, childElementCount * 30 + 15)
           } else {
@@ -117,8 +122,7 @@ export default class Tree {
           }
         }
       } else if (className.indexOf('tree-childs-btn') > -1) {
-        console.log({pathname})
-        pickMenuItem(_this, pathname)
+        pickMenuItem(_this, pathname, mode)
       } 
       if (nodeName === "A") {
         if (__BASECONFIG__?.framework === 'react') {
@@ -128,13 +132,9 @@ export default class Tree {
               __WCCONFIG__?.history?.push(target.pathname)
           } else {}
         }
-        // console.log(99999)
-        // history.pushState({}, "", target.dataset.link)
       }
     }, false)
     this.__DOM__.children[0].innerHTML = this._render(this.props.data)
-    // console.log(this.config?.reactConfig?.ReactDOM.render)
-    // this.config?.reactConfig?.ReactDOM.render(3333, this.config?.mountPoint)
   }
   unmount () {
     console.log('unmount')
@@ -162,31 +162,24 @@ export default class Tree {
     let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
     for (let [i, it] of v.entries()) {
       let tag = tagReg(it.tag) ? it.tag : 'a'
-      // let link = it.link ? `data-link=${link}` : '';
-      // let href = it.href ? `${chref === 'javascript:;' ? '' : `${chref}`}/${it.href}` : 'javascript:;'
-      // let href = link || !it.path
-      //   ? 'javascript:;' 
-      //   : `#${chref === 'javascript:;' ? '' : chref}/${it.path}`
       
-      let href = __WCCONFIG__?.mode === 'browser'
-        ? (it.path ? `${chref === 'javascript:;' ? '' : chref}/${it.path}` : 'javascript:;')
-        : `#${chref === 'javascript:;' ? '' : chref}/${it.path}`
+      let href = it.path 
+        ? `${chref === 'javascript:;' ? '' : chref}/${it.path}` 
+        : 'javascript:;'
+      const finalHref = createHref(href, __WCCONFIG__?.mode);
 
       if (it.childs && it.childs.length) {
-        content.push(`<ul class="tree-ul"> <li class="tree-li tree-li-head"> <${tag} class="tree-btn" href="${href}">${it.title}</${tag}> </li><li class="tree-li tree-li-childs tree-li-hide">`)
+        content.push(`<ul class="tree-ul"> <li class="tree-li tree-li-head"> <${tag} class="tree-btn" href="${finalHref}">${it.title}</${tag}> </li><li class="tree-li tree-li-childs tree-li-hide">`)
         this._render(it.childs, content, count, href)
         count++
       } else if (i === v.length - 1) {
-        content.push(`<${tag} class="tree-btn tree-childs-btn" href="${href}">${it.title}</${tag}>` + '</li></ul>'.repeat(count))
+        content.push(`<${tag} class="tree-btn tree-childs-btn" href="${finalHref}">${it.title}</${tag}>` + '</li></ul>'.repeat(count))
         count = 1
       } else {
-        content.push(`<${tag} class="tree-btn tree-childs-btn" href="${href}">${it.title}</${tag}>`)
+        content.push(`<${tag} class="tree-btn tree-childs-btn" href="${finalHref}">${it.title}</${tag}>`)
       }
     }
-    // this.__DOM__.innerHTML = content.join('')
     return content.join('')
-
-    
   }
   _calculate(dom, tag){
 

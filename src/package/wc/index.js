@@ -18,10 +18,11 @@ export default async function (module, baseConfig = {framework: 'react'}) {
         name = wcObj?.name?.toLowerCase();
         config = wcObj?.config;
       }
-      console.log({config})
+      console.log({name, config})
   
       if(!customElements.get(name)){
         let m = (await import(`./${name}/index.js`)).default
+        console.log({m})
         hideProperty(m.prototype, '__REGIESTRYCONFIG__', function() {
           this.__WCCONFIG__ = config
           this.__BASECONFIG__ = baseConfig
