@@ -92,7 +92,7 @@ function matchFileFormat(filename) {
 }
 
 function matchFileName(filename) {
-  return filename.slice(filename.lastIndexOf('/') + 1);
+  return filename.slice(filename.lastIndexOf(path.sep) + 1);
 }
 
 function matchProject(filename) {

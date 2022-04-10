@@ -97,18 +97,17 @@ module.exports = {
   },
   // 如果不是工程入口, 则新建一层项目目录并把`index.${FORMAT}.js`作为项目入口
   regenerateDest(dest, filename) {
-    
     const reg = new RegExp(
       `(${sep}(tools|utils)${sep}index\.js|${sep}package${sep}styles${sep})`
     );
     if (!reg.test(dest)) {
       let project = filename.split('.')[0]
-      dest = dest.split(sep)
+      dest = dest.split(path.sep)
       if (project !== 'index') {
         dest.splice(-1, 0, project)
       }
       dest[dest.length - 1] = `index.${FORMAT}.js`
-      dest = dest.join(sep)
+      dest = dest.join(path.sep)
     }
     return dest
   },

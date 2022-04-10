@@ -15,10 +15,6 @@ async function watcherBuild (file, format) {
   console.log(chalk.red(`正在编译${format}文件: ${file}`))
   let entry = file
   let output = file.replace(`src`, `dist`)
-  console.log({output})
-  setTimeout(() => {
-    process.exit();
-  }, 5000)
   await handler(entry, output)
 }
 let files
