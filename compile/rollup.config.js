@@ -4,8 +4,8 @@ const { terser } = require('rollup-plugin-terser')
 const extensions = require('rollup-plugin-extensions');
 const typescript = require('rollup-plugin-typescript2');
 const { babel } = require('@rollup/plugin-babel');
-let { sep } = require('path');
-sep = sep.replace('\\', '\\\\');
+let path = require('path');
+sep = path.sep.replace('\\', '\\\\');
 
 const { FORMAT = 'esm' } = process.env
 
