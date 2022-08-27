@@ -1,15 +1,20 @@
-const date = require('./date.js');
-const path = require('path');
-const fs = require('iofs');
-const optc = (obj) => Object.prototype.toString.call(obj);
-const makeConfig = require('../rollup.config.js');
-const rollup = require('rollup');
-const terser = require('terser');
+import date from './date.js';
+import path from 'path';
+import fs from 'iofs';
+import makeConfig from '../rollup.config.js';
+import { rollup } from 'rollup';
+import { minify } from 'terser';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // const { sep } = path;
 const sepTransform = {
   '\\': '\\\\',
   '/': '\/'
 }
+const optc = (obj) => Object.prototype.toString.call(obj);
 let sep = sepTransform[path.sep]
 
 function isFunction(obj) {
@@ -40,7 +45,7 @@ function resolve () {
 
 function write (dest, code, zip = true) {
   return new Promise(async (resolve, reject) => {
-    const minCode = await terser.minify(code, {
+    const minCode = await minify(code, {
       output: {
         ascii_only: true,
         keep_quoted_props: true
@@ -106,7 +111,18 @@ function fixReg(p, isGlobal = true) {
     .replace('(.*).', '\\.'), isGlobal ? 'g' : '');
 }
 
-exportPlugins(exports, {
+// exportPlugins(exports, {
+//   resolve,
+//   copyFile,
+//   isArray,
+//   date,
+//   matchFileFormat,
+//   matchFileName,
+//   matchProject,
+//   fixReg,
+//   sep
+// });
+export {
   resolve,
   copyFile,
   isArray,
@@ -116,4 +132,4 @@ exportPlugins(exports, {
   matchProject,
   fixReg,
   sep
-});
+}

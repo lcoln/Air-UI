@@ -1,7 +1,7 @@
-const fs = require('iofs')
-const { matchFileFormat, matchFileName, matchProject } = require('../utils')
+import fs from 'iofs'
+import { matchFileFormat, matchFileName, matchProject } from '../utils/index.js'
 
-module.exports = async function handler (source, dest, cb) {
+export default async function handler (source, dest, cb) {
   if (!fs.isdir(source)) {
     // console.log({source, dest})
     let handler = null
@@ -11,7 +11,9 @@ module.exports = async function handler (source, dest, cb) {
     let project = matchProject(source)
 
     try{
-      handler = require(`./${['ts', 'tsx'].includes(format) ? 'js' : format}.js`)
+      handler = (await import(
+        `./${['ts', 'tsx'].includes(format) ? 'js' : format}.js`)
+      ).default
     } catch(e) {
       console.error(`文件${filename}编译出错, 错就错在: ${e.message}`)
     }

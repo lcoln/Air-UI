@@ -1,6 +1,6 @@
 {
   "name": "@linteng/airui",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "集成web-component组件库, js插件, 主题库的微型开发框架",
   "author": "linteng <linteng.me@gmail.com>",
   "homepage": "",
@@ -66,5 +66,6 @@
     "history": "4.10.1",
     "react": "^17.0.2",
     "react-to-webcomponent": "^1.5.1"
-  }
+  },
+  "type": "module"
 }

@@ -1,11 +1,14 @@
-const { nodeResolve } = require('@rollup/plugin-node-resolve');
-const aliasPlugin = require('@rollup/plugin-alias');
-const { terser } = require('rollup-plugin-terser')
-const extensions = require('rollup-plugin-extensions');
-const typescript = require('rollup-plugin-typescript2');
-const { babel } = require('@rollup/plugin-babel');
-let path = require('path');
-sep = path.sep.replace('\\', '\\\\');
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import aliasPlugin from '@rollup/plugin-alias'
+import { terser } from 'rollup-plugin-terser'
+import extensions from 'rollup-plugin-extensions'
+import typescript from 'rollup-plugin-typescript2'
+import { babel } from '@rollup/plugin-babel'
+import path from 'path'
+import less from 'rollup-plugin-less'
+import json from '@rollup/plugin-json';
+
+const sep = path.sep.replace('\\', '\\\\');
 
 const { FORMAT = 'esm' } = process.env
 
@@ -31,9 +34,10 @@ function getConfig({alias = {}, source, dest, filename, format}) {
     },
     plugins: [
       extensions({
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '.esm.js'],
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.esm.js', '.json'],
         resolveIndex: true,
-      })
+      }),
+      json()
     ]
   }
 
@@ -75,7 +79,7 @@ function getConfig({alias = {}, source, dest, filename, format}) {
           input: source,
           external: [],
           plugins: [
-            require('rollup-plugin-less')({
+            less({
               output: dest,
               option: {
                 compress: false
@@ -88,10 +92,10 @@ function getConfig({alias = {}, source, dest, filename, format}) {
   }
 }
 
-module.exports = {
-  getAlias(project) {
+export default {
+  async getAlias(project) {
     if (!project) return null
-    const config = require('../src/config')
+    const config = (await import('../src/config.js')).default
     const c = config.genConfig(project) || {}
     return c.alias
   },
@@ -111,10 +115,10 @@ module.exports = {
     }
     return dest
   },
-  genConfigs: function ({source, dest, filename, project, format}) {
+  async genConfigs({source, dest, filename, project, format}) {
     
     const config = getConfig({
-      alias: this.getAlias(project), 
+      alias: await this.getAlias(project), 
       dest: this.regenerateDest(dest, filename), 
       source,
       filename,

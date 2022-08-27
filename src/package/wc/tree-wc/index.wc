@@ -1,6 +1,8 @@
 <template>
   <div class="air-ui-tree-container">
     <div class="air-ui-tree"></div>
+    <!-- <slot></slot>
+    <slot name="test"></slot> -->
   </div>
 </template>
 
@@ -60,12 +62,13 @@ function tagReg (tag) {
 function pickMenuItem(ctx, pathname, mode) {
   let btns = [...new Set(ctx.__DOM__.querySelectorAll('.tree-childs-btn'))]
   let btns1 = [...new Set(ctx.__DOM__.querySelectorAll('.tree-btn'))]
-  console.log({pathname})
+  // console.log({pathname})
   for (let it of [...btns, ...btns1]) {
-    console.log({it})
     if (pathname === it[routeMode[mode]]) {
-      it.style.background = '#38343c'
+      console.log(it, pathname)
+      it.style['background-color'] = '#38343c'
     } else {
+      console.log(it[routeMode[mode]], pathname)
       it.style.background = ''
     }
   }
@@ -88,18 +91,21 @@ export default class Tree {
 
   /* render */
   async mounted () {
+    // console.log(this);
     let _this = this
     let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
     // console.log({ __WCCONFIG__ });
     const { mode = 'browser' } = __WCCONFIG__;
     pickMenuItem(_this, location[routeMode[mode]], mode)
-    router.on('*', (ev) => {
-      pickMenuItem(
-        _this, 
-        ev.target.location[routeMode[mode]],
-        mode
-      )
-    })
+    if (typeof history !== 'undefined') {
+      router.on('*', (ev) => {
+        pickMenuItem(
+          _this, 
+          ev.target.location[routeMode[mode]],
+          mode
+        )
+      })
+    }
 
     this.__DOM__.setAttribute('style', `color: ${this.props.color};`)
     this.__DOM__.addEventListener('click', function (ev) {
@@ -159,6 +165,7 @@ export default class Tree {
     console.log('adopted')
   }
   _render (v, content = [], count = 1, chref = '') {
+    // console.log({count}, v)
     let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
     for (let [i, it] of v.entries()) {
       let tag = tagReg(it.tag) ? it.tag : 'a'
@@ -178,6 +185,10 @@ export default class Tree {
       } else {
         content.push(`<${tag} class="tree-btn tree-childs-btn" href="${finalHref}">${it.title}</${tag}>`)
       }
+    }
+    if (v.length === 1) {
+      content.unshift(`<ul class="tree-ul"> <li class="tree-li tree-li-head">`)
+      content.push(`</li></ul>`)
     }
     return content.join('')
   }

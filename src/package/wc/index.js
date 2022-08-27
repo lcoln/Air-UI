@@ -1,11 +1,13 @@
 import * as utils from '../utils/index.js';
 import { hideProperty, isString } from '../utils/index.js';
 import init from './init.js';
-
+const isBrowser = () => typeof window !== "undefined"
 export default async function (module, baseConfig = {framework: 'react'}) {
-  init()
+  if (isBrowser()) {
+    init()
+    hideProperty(window.HTMLElement.prototype, 'Utils', utils)
+  }
   module = isString(module) ? [module] : module
-  hideProperty(HTMLElement.prototype, 'Utils', utils)
   while (module.length) {
     try {
       let wcObj = module.shift();
@@ -18,11 +20,11 @@ export default async function (module, baseConfig = {framework: 'react'}) {
         name = wcObj?.name?.toLowerCase();
         config = wcObj?.config;
       }
-      console.log({name, config})
+      // console.log({name, config})
   
       if(!customElements.get(name)){
         let m = (await import(`./${name}/index.js`)).default
-        console.log({m})
+        // console.log({m})
         hideProperty(m.prototype, '__REGIESTRYCONFIG__', function() {
           this.__WCCONFIG__ = config
           this.__BASECONFIG__ = baseConfig

@@ -1,7 +1,7 @@
-const path = require('path')
-const fs = require('iofs')
-const uglify = require('uglify-js')
-const less = require('less')
+import path from 'path'
+import fs from 'iofs'
+import uglify from 'uglify-js'
+import less from 'less'
 
 const base_less = `
 * {margin:0;padding: 0;box-sizing: border-box;}
@@ -131,7 +131,7 @@ ${result}`
 )
 }
 
-module.exports = async function build ({source, dest, filename, code}) {
+export default async function build ({source, dest, filename, code}) {
 
   let style = code.match(/<style[^>]*?>([\w\W]*?)<\/style>/)
   let html = code.match(/<template>([\w\W]*?)<\/template>/)

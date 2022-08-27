@@ -10,13 +10,15 @@ var bundle = (function () {
       return rv;
     };
   };
-  history.pushState = _wr('pushState');
-  history.replaceState = _wr('replaceState');
+  if (typeof history !== 'undefined') {
+    history.pushState = _wr('pushState');
+    history.replaceState = _wr('replaceState');
+  }
 
   const routes = {};
   function routerCallback(e) {
     const path = e.state && e.state.path;
-    console.log({path});
+    // console.log({path});
     // debugger
     if (routes['*']) {
       routes['*'](e);
@@ -37,8 +39,11 @@ var bundle = (function () {
     if (!(this instanceof Router)) {
       return new Router(...arguments);
     }
-
-    return _init(this);
+    let ctx = null;
+    if (typeof window !== 'undefined') {
+      ctx = _init(this);
+    }
+    return ctx;
   }
 
   Router.prototype.on = function (path, callback) {
@@ -46,7 +51,8 @@ var bundle = (function () {
     if (!routes[path]) {
       routes[path] = callback
     } else {
-      throw new Error(`route ${path} is already registered!`)
+      // throw new Error(`route ${path} is already registered!`)
+      console.log(`route ${path} is already registered!`);
     }
     
   }

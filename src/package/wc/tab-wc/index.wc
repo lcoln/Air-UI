@@ -1,0 +1,62 @@
+<template>
+  <div class="air-ui-tab-container">
+    <div class="air-ui-tab"><slot name="test"></slot></div>
+  </div>
+</template>
+
+<script>
+import '../icon-wc/index.js';
+import './index.less';
+
+export default class Tree {
+  props = {
+    data: [],
+    color: '#b7b7b7'
+  }
+  data = {
+
+  }
+
+  /* render */
+  async mounted () {
+    console.log(this);
+    let _this = this
+    let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
+    // console.log({ __WCCONFIG__ });
+    const { mode = 'browser' } = __WCCONFIG__;
+
+    this.__DOM__.addEventListener('click', function (ev) {
+
+      let { target } = ev
+      let { nodeName, innerHTML, className, parentElement, pathname } = target
+      let { nextElementSibling } = parentElement
+      if ((nodeName === 'LI' && className === 'tree-li-head')
+        || (parentElement && parentElement.className.indexOf('tree-li-head') > -1)){
+        
+      } 
+    }, false)
+    this.__DOM__.children[0].innerHTML = this._render(this.props.data)
+  }
+  unmount () {
+    console.log('unmount')
+  }
+  watch (name, old, v) {
+    switch (name) {
+      case 'skin':
+        break;
+      default:
+        // statements_def
+        break;
+    }
+  }
+  adopted () {
+    console.log('adopted')
+  }
+  _render (v, content = [], count = 1, chref = '') {
+    // console.log({count}, v)
+    let { __WCCONFIG__ = {}, __BASECONFIG__ = {} } = this;
+    
+    return ""
+  }
+}
+</script>

@@ -1,10 +1,9 @@
-const chokidar = require('chokidar')
-const { resolve } = require('./utils')
-const handler = require('./handler')
-const ignoreWatch = require('./config/ignore.watch.json')
-const { matchFileFormat, sep } = require('./utils')
-const chalk = require('chalk')
-const fs = require('iofs')
+import chokidar from 'chokidar'
+import handler from './handler/index.js'
+import ignoreWatch from './config/ignore.watch.js'
+import { matchFileFormat, sep, resolve } from './utils/index.js'
+import chalk from 'chalk'
+import fs from 'iofs'
 
 // 是否属于需要忽略监听的文件
 function shouldIgnoreWatch(file) { 
@@ -25,7 +24,7 @@ function resetParam() {
     js: [],
     less: [],
     wc: [],
-    // tsx: []
+    tsx: []
   }
   isReady = false
 }
@@ -42,22 +41,22 @@ function watcher () {
         if (!fs.isdir(filepath) && !shouldIgnoreWatch(filepath)) {
           let format = matchFileFormat(filepath)
           if (isReady) {
-            // await watcherBuild(filepath, format)
+            await watcherBuild(filepath, format)
           } else {
             files[format] && files[format].push(filepath)
           }
-          // await watcherBuild(filepath, format)
+          await watcherBuild(filepath, format)
         }
       })
       .on('ready', async () => {
         for (let it of Object.keys(files)) {
           console.log(chalk.yellow(`**************** ${it}编译 ****************`))
-          await Promise.all(files[it].map(async file => {
-            await watcherBuild(file, it)
-          }));
-          // files[it].map(file => {
-          //   watcherBuild(file, it)
-          // })
+          // await Promise.all(files[it].map(async file => {
+          //   await watcherBuild(file, it)
+          // }));
+          files[it].map(file => {
+            watcherBuild(file, it)
+          })
         }
         resetParam()
         isReady = true

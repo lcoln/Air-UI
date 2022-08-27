@@ -69,5 +69,5 @@ function dateFormat (time = new Date(), str = 'Y-m-d H:i:s') {
   return str
 }
 
-module.exports = dateFormat
-// export default dateFormat
+// module.exports = dateFormat
+export default dateFormat
